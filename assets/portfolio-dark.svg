@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 760" role="img" aria-labelledby="title desc">
+  <title id="title">Walid El Khoukh — AI and Data Engineer</title>
+  <desc id="desc">A dark editorial banner with a coral data-flow diagram and the headline From problem to production.</desc>
+  <rect width="1600" height="760" fill="#171715"/>
+  <g fill="none" stroke="#f2eee5" stroke-width="2" opacity=".55">
+    <path d="M72 112H1528"/>
+    <path d="M72 690H1528"/>
+    <path d="M72 112V690"/>
+    <path d="M1528 112V690"/>
+    <path d="M1070 218h340v120h-340z"/>
+    <path d="M1070 398h340v120h-340z"/>
+    <path d="M1070 578h340v54h-340z"/>
+    <path d="M1000 278h70M1000 458h70M1000 605h70" stroke="#ff6b4d" stroke-width="8"/>
+    <path d="M1044 278V605" stroke="#ff6b4d" stroke-width="2" stroke-dasharray="8 12"/>
+    <circle cx="1000" cy="278" r="10" fill="#ff6b4d" stroke="none"/>
+    <circle cx="1000" cy="458" r="10" fill="#ff6b4d" stroke="none"/>
+    <circle cx="1000" cy="605" r="10" fill="#ff6b4d" stroke="none"/>
+  </g>
+  <g fill="#f2eee5" font-family="Arial, Helvetica, sans-serif">
+    <text x="112" y="170" font-size="18" font-weight="700" letter-spacing="5">WALID EL KHOUKH / PROFILE PREVIEW</text>
+    <text x="112" y="245" font-size="22" font-weight="700" fill="#ff6b4d" letter-spacing="4">AI &amp; DATA ENGINEER</text>
+    <text x="112" y="344" font-size="76" font-weight="800" letter-spacing="-3">FROM PROBLEM</text>
+    <text x="112" y="432" font-size="76" font-weight="800" letter-spacing="-3" fill="#ff6b4d">TO PRODUCTION.</text>
+    <text x="112" y="510" font-size="22" letter-spacing="1">Governed systems, useful products, evidence you can inspect.</text>
+    <text x="112" y="625" font-size="16" font-weight="700" letter-spacing="3">PORTFOLIO · SYSTEMS · DELIVERY</text>
+    <text x="1108" y="255" font-size="16" font-weight="700" letter-spacing="3">INPUT</text>
+    <text x="1108" y="292" font-size="30" font-weight="700">A hard problem</text>
+    <text x="1108" y="435" font-size="16" font-weight="700" letter-spacing="3">METHOD</text>
+    <text x="1108" y="472" font-size="30" font-weight="700">A governed path</text>
+    <text x="1108" y="604" font-size="16" font-weight="700" letter-spacing="3">OUTPUT</text>
+    <text x="1108" y="627" font-size="24" font-weight="700">Something people can use</text>
+  </g>
+</svg>
