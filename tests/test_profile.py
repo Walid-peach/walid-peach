@@ -38,8 +38,9 @@ class ProfileTests(unittest.TestCase):
         self.assertTrue(all(bricks[i]['count'] > 0 for i in hits))
 
     def test_language_accounting_includes_other(self):
-        parts = p.language_parts({'Python': 20, 'TypeScript': 30, 'HTML': 10, 'CSS': 5, 'Go': 2})
+        parts = p.language_parts({'Jupyter Notebook': 1000, 'Python': 20, 'TypeScript': 30, 'HTML': 10, 'CSS': 5, 'Go': 2})
         self.assertEqual(sum(v for _, v in parts), 67)
+        self.assertNotIn('Jupyter Notebook', dict(parts))
         self.assertEqual(parts[-1], ('Other', 7))
 
     def test_empty_activity_and_languages_are_supported(self):

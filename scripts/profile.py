@@ -95,7 +95,9 @@ def rule(x1, y1, x2, y2):
 
 
 def language_parts(languages):
-    ranked = sorted(languages.items(), key=lambda pair: (-pair[1], pair[0]))
+    ranked = sorted(
+        ((name, size) for name, size in languages.items() if name != 'Jupyter Notebook'),
+        key=lambda pair: (-pair[1], pair[0]))
     parts = ranked[:3]
     other = sum(value for _, value in ranked[3:])
     if other:
@@ -108,15 +110,14 @@ def language_bar(data, x, y, width, font=16):
     total = sum(value for _, value in parts)
     if not total:
         return text(x, y, 'No language data', font, MUTED)
-    out = text(x, y, 'repository languages', font, MUTED)
+    out = text(x, y, 'source languages', font, MUTED)
     offset = x
     colors = [CORAL, '#87939f', '#c7ced6', '#4c5663']
     for i, (name, value) in enumerate(parts):
         w = width * value / total
         out += f'<rect x="{offset:.2f}" y="{y+14}" width="{w:.2f}" height="12" fill="{colors[i]}"><title>{escape(name)}: {value / total:.1%} of source bytes</title></rect>'
         offset += w
-    names = {'Jupyter Notebook': 'Notebooks', 'TypeScript': 'TypeScript'}
-    labels = [names.get(name, name) for name, _ in parts]
+    labels = [name for name, _ in parts]
     out += text(x, y + 52, ' · '.join(labels[:2]), font - 1, MUTED)
     out += text(x, y + 76, ' · '.join(labels[2:]), font - 1, MUTED)
     return out
@@ -201,7 +202,7 @@ def render(data, mobile=False, animated=True):
         f'{data["contributions"]} contributions in the past year, '
         f'{data["public_repositories"]} public non-fork repositories, '
         f'{data["public_pull_requests"]} public pull requests authored, all time. '
-        'Repository languages measured by source bytes. Links are below the image.')
+        'Source languages measured by source bytes, excluding Jupyter notebooks. Links are below the image.')
     out = f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}" role="img" aria-labelledby="title desc"><title id="title">{escape(title)}</title><desc id="desc">{escape(desc)}</desc>'
     out += '<style>text{font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;font-weight:400} .still{display:none}@media(prefers-reduced-motion:reduce){.motion{display:none}.still{display:inline}}</style>'
     out += f'<rect width="{w}" height="{h}" rx="8" fill="{BG}"/><rect x="1" y="1" width="{w-2}" height="{h-2}" rx="8" fill="none" stroke="{LINE}" stroke-width="1.5"/>'
@@ -279,7 +280,7 @@ Turning complex data into useful tools.
 
 **Snapshot: {data['updated']} UTC.** {data['contributions']:,} contributions in GitHub's rolling-year calendar; {data['public_repositories']} public, owned, non-fork repositories; {data['public_pull_requests']} public pull requests authored, all time.
 
-Language proportions measure source bytes across public, owned, non-fork repositories, including notebooks. They are not proficiency ratings. Breakout auto-plays over the calendar; cells disappear when hit and reset each loop. It is an animation, not an interactive game. Reduced-motion preferences show a static calendar.
+Language proportions measure source bytes across public, owned, non-fork repositories, excluding Jupyter notebooks from both the bar and its percentages. They are not proficiency ratings. Breakout auto-plays over the calendar; cells disappear when hit and reset each loop. It is an animation, not an interactive game. Reduced-motion preferences show a static calendar.
 
 [Portfolio](https://walidelkhoukh.com) · [LinkedIn](https://www.linkedin.com/in/walid-elkhoukh) · [Email](mailto:contact@walidelkhoukh.com)
 
