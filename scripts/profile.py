@@ -217,7 +217,7 @@ def breakout(data, x, y, width, height, animated=True):
     return out
 
 
-def render(data, mobile=False, animated=True):
+def render(data, mobile=False, animated=True, panel=None):
     w, h = (640, 1320) if mobile else (1200, 975)
     x = 34 if mobile else 56
     size = 24
@@ -241,6 +241,12 @@ def render(data, mobile=False, animated=True):
         out += text(x, 218, 'Turning complex data into', 22) + text(x, 248, 'useful tools.', 22)
     else:
         out += text(x, 218, 'Turning complex data into useful tools.', size)
+    if panel == 'intro':
+        height = 280 if mobile else 250
+        out = out.replace(f'height="{h}" viewBox="0 0 {w} {h}"',
+            f'height="{height}" viewBox="0 0 {w} {height}"', 1)
+        out += rule(1, height-1, w-1, height-1)
+        return out + '</svg>\n'
     offset = 32 if mobile else 0
     out += command(x, 280+offset, 'ls project')
     for i, (name, label) in enumerate([('MonÉlu', 'civic data & AI'), ('Agentarium', 'agent tooling'), ('Interview Prep', 'learning tools')]):
@@ -272,26 +278,32 @@ def render(data, mobile=False, animated=True):
     else:
         out += breakout(data, bx, by, bw, bh, False)
     out += text(w-30, h-22, 'snapshot ' + data['updated'] + ' UTC', 14 if not mobile else 16, MUTED, 'text-anchor="end"')
-    return out + '</svg>\n'
+    out += '</svg>\n'
+    if panel:
+        cut = 280 if mobile else 250
+        top, height = cut, h-cut
+        out = out.replace('</svg>', rule(1, cut+1, w-1, cut+1) + '</svg>')
+        out = out.replace(f'height="{h}" viewBox="0 0 {w} {h}"',
+            f'height="{height}" viewBox="0 {top} {w} {height}"', 1)
+    return out
 
 
 def readme(data):
     return f'''<picture>
-  <source media="(max-width: 640px)" srcset="./assets/terminal-mobile.svg">
-  <img src="./assets/terminal.svg" width="1200" alt="Walid El Khoukh — AI &amp; Data Engineer. A quiet terminal with projects, GitHub telemetry and animated contribution Breakout. Project and contact links follow below.">
+  <source media="(max-width: 640px)" srcset="./assets/intro-mobile.svg">
+  <img src="./assets/intro.svg" width="1200" alt="Walid El Khoukh — AI &amp; Data Engineer. Turning complex data into useful tools.">
 </picture>
 
-<p align="center">
-  <a href="https://mon-elu.vercel.app/">MonÉlu ↗</a> ·
-  <a href="https://walid-peach.github.io/interview-prep/">Interview Prep ↗</a>
+<p align="left">
+  <a href="https://walidelkhoukh.com"><img src="./assets/contact-portfolio.svg" width="132" height="36" alt="Portfolio"></a>
+  <a href="https://www.linkedin.com/in/walid-elkhoukh"><img src="./assets/contact-linkedin.svg" width="122" height="36" alt="LinkedIn"></a>
+  <a href="mailto:contact@walidelkhoukh.com"><img src="./assets/contact-email.svg" width="98" height="36" alt="Email"></a>
 </p>
 
-<p align="center">
-  <code>$ contact</code><br>
-  <a href="https://walidelkhoukh.com">Portfolio ↗</a> ·
-  <a href="https://www.linkedin.com/in/walid-elkhoukh">LinkedIn ↗</a> ·
-  <a href="mailto:contact@walidelkhoukh.com">Email ↗</a>
-</p>
+<picture>
+  <source media="(max-width: 640px)" srcset="./assets/terminal-mobile.svg">
+  <img src="./assets/terminal.svg" width="1200" alt="Projects, GitHub telemetry, contribution streak and animated Breakout. Project links are in the text version below.">
+</picture>
 
 <details>
 <summary>Text version &amp; data notes</summary>
@@ -323,7 +335,9 @@ def main():
     data = refresh() if args.refresh else json.loads((ROOT / 'data/profile.json').read_text())
     validate(data)
     for name, mobile in [('terminal.svg', False), ('terminal-mobile.svg', True)]:
-        (ROOT / 'assets' / name).write_text(render(data, mobile))
+        (ROOT / 'assets' / name).write_text(render(data, mobile, panel='body'))
+        intro = 'intro-mobile.svg' if mobile else 'intro.svg'
+        (ROOT / 'assets' / intro).write_text(render(data, mobile, animated=False, panel='intro'))
     (ROOT / 'README.md').write_text(readme(data))
 
 

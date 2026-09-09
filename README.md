@@ -1,19 +1,18 @@
 <picture>
-  <source media="(max-width: 640px)" srcset="./assets/terminal-mobile.svg">
-  <img src="./assets/terminal.svg" width="1200" alt="Walid El Khoukh — AI &amp; Data Engineer. A quiet terminal with projects, GitHub telemetry and animated contribution Breakout. Project and contact links follow below.">
+  <source media="(max-width: 640px)" srcset="./assets/intro-mobile.svg">
+  <img src="./assets/intro.svg" width="1200" alt="Walid El Khoukh — AI &amp; Data Engineer. Turning complex data into useful tools.">
 </picture>
 
-<p align="center">
-  <a href="https://mon-elu.vercel.app/">MonÉlu ↗</a> ·
-  <a href="https://walid-peach.github.io/interview-prep/">Interview Prep ↗</a>
+<p align="left">
+  <a href="https://walidelkhoukh.com"><img src="./assets/contact-portfolio.svg" width="132" height="36" alt="Portfolio"></a>
+  <a href="https://www.linkedin.com/in/walid-elkhoukh"><img src="./assets/contact-linkedin.svg" width="122" height="36" alt="LinkedIn"></a>
+  <a href="mailto:contact@walidelkhoukh.com"><img src="./assets/contact-email.svg" width="98" height="36" alt="Email"></a>
 </p>
 
-<p align="center">
-  <code>$ contact</code><br>
-  <a href="https://walidelkhoukh.com">Portfolio ↗</a> ·
-  <a href="https://www.linkedin.com/in/walid-elkhoukh">LinkedIn ↗</a> ·
-  <a href="mailto:contact@walidelkhoukh.com">Email ↗</a>
-</p>
+<picture>
+  <source media="(max-width: 640px)" srcset="./assets/terminal-mobile.svg">
+  <img src="./assets/terminal.svg" width="1200" alt="Projects, GitHub telemetry, contribution streak and animated Breakout. Project links are in the text version below.">
+</picture>
 
 <details>
 <summary>Text version &amp; data notes</summary>
