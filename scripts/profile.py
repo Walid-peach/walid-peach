@@ -105,21 +105,32 @@ def language_parts(languages):
     return parts
 
 
-def language_bar(data, x, y, width, font=16):
+def language_donut(data, x, y, width, font=16):
     parts = language_parts(data['languages'])
     total = sum(value for _, value in parts)
     if not total:
         return text(x, y, 'No language data', font, MUTED)
     out = text(x, y, 'source languages', font, MUTED)
-    offset = x
+    radius = 48 if font < 20 else 56
+    stroke = 13 if font < 20 else 16
+    cx, cy = x + radius, y + 24 + radius
+    ring_radius = radius - stroke / 2
+    circumference = 2 * math.pi * ring_radius
+    offset = 0
     colors = [CORAL, '#87939f', '#c7ced6', '#4c5663']
     for i, (name, value) in enumerate(parts):
-        w = width * value / total
-        out += f'<rect x="{offset:.2f}" y="{y+14}" width="{w:.2f}" height="12" fill="{colors[i]}"><title>{escape(name)}: {value / total:.1%} of source bytes</title></rect>'
-        offset += w
-    labels = [name for name, _ in parts]
-    out += text(x, y + 52, ' · '.join(labels[:2]), font - 1, MUTED)
-    out += text(x, y + 76, ' · '.join(labels[2:]), font - 1, MUTED)
+        length = circumference * value / total
+        out += (f'<circle cx="{cx}" cy="{cy}" r="{ring_radius}" fill="none" '
+            f'stroke="{colors[i]}" stroke-width="{stroke}" '
+            f'stroke-dasharray="{length:.4f} {circumference-length:.4f}" '
+            f'stroke-dashoffset="{-offset:.4f}" transform="rotate(-90 {cx} {cy})">'
+            f'<title>{escape(name)}: {value / total:.1%} of source bytes</title></circle>')
+        offset += length
+        ly = y + 41 + i * (24 if font < 20 else 28)
+        lx = x + radius * 2 + 20
+        out += f'<circle cx="{lx}" cy="{ly-5}" r="3" fill="{colors[i]}"/>'
+        out += text(lx+10, ly, name, font-2, MUTED)
+        out += text(x+width, ly, f'{value / total:.0%}', font-2, MUTED, 'text-anchor="end"')
     return out
 
 
@@ -236,12 +247,12 @@ def render(data, mobile=False, animated=True):
             (str(data['public_pull_requests']), 'public PRs · all time')]
         for i, (value, label) in enumerate(stats):
             out += text(x, ty+43+i*39, value, 25) + text(x+107, ty+43+i*39, label, 20, MUTED)
-        out += language_bar(data, x, ty+188, w-2*x, 20)
-        bx, by, bw, bh = x, ty+320, w-2*x, 224
+        out += language_donut(data, x, ty+188, w-2*x, 20)
+        bx, by, bw, bh = x, ty+365, w-2*x, 224
     else:
         for i, (key, label) in enumerate([('contributions','contributions / year'), ('public_repositories','public repos'), ('public_pull_requests','public PRs · all time')]):
             out += text(x, ty+44+i*65, f'{data[key]:,}', 24) + text(x, ty+69+i*65, label, 17, MUTED)
-        out += language_bar(data, x, ty+266, 277, 17)
+        out += language_donut(data, x, ty+244, 277, 17)
         out += rule(366, ty-12, 366, h-56)
         bx, by, bw, bh = 396, ty+32, w-428, 287
     if animated:
@@ -280,7 +291,7 @@ Turning complex data into useful tools.
 
 **Snapshot: {data['updated']} UTC.** {data['contributions']:,} contributions in GitHub's rolling-year calendar; {data['public_repositories']} public, owned, non-fork repositories; {data['public_pull_requests']} public pull requests authored, all time.
 
-Language proportions measure source bytes across public, owned, non-fork repositories, excluding Jupyter notebooks from both the bar and its percentages. They are not proficiency ratings. Breakout auto-plays over the calendar; cells disappear when hit and reset each loop. It is an animation, not an interactive game. Reduced-motion preferences show a static calendar.
+Language proportions measure source bytes across public, owned, non-fork repositories, excluding Jupyter notebooks from both the donut chart and its percentages. They are not proficiency ratings. Breakout auto-plays over the calendar; cells disappear when hit and reset each loop. It is an animation, not an interactive game. Reduced-motion preferences show a static calendar.
 
 [Portfolio](https://walidelkhoukh.com) · [LinkedIn](https://www.linkedin.com/in/walid-elkhoukh) · [Email](mailto:contact@walidelkhoukh.com)
 
