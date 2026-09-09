@@ -2,7 +2,7 @@
 """Render a dependency-free terminal README and simulated contribution Breakout."""
 import argparse
 from collections import Counter
-from datetime import datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from html import escape
 import json
 import math
@@ -80,6 +80,20 @@ def validate(data):
         for day in week['contributionDays']:
             if day['weekday'] not in range(7) or day['contributionCount'] < 0:
                 raise ValueError('Invalid contribution day')
+
+
+def current_streak(data):
+    """Consecutive active calendar days; an unfinished snapshot day has grace."""
+    counts = {d['date']: d['contributionCount']
+              for week in data['weeks'] for d in week['contributionDays']}
+    day = date.fromisoformat(data['updated'])
+    if not counts.get(day.isoformat(), 0):
+        day -= timedelta(days=1)
+    streak = 0
+    while counts.get(day.isoformat(), 0) > 0:
+        streak += 1
+        day -= timedelta(days=1)
+    return streak
 
 
 def text(x, y, value, size=23, color=WHITE, extra=''):
@@ -204,7 +218,7 @@ def breakout(data, x, y, width, height, animated=True):
 
 
 def render(data, mobile=False, animated=True):
-    w, h = (640, 1435) if mobile else (1200, 1060)
+    w, h = (640, 1320) if mobile else (1200, 975)
     x = 34 if mobile else 56
     size = 24
     title = 'Walid El Khoukh — AI & Data Engineer'
@@ -213,6 +227,7 @@ def render(data, mobile=False, animated=True):
         f'{data["contributions"]} contributions in the past year, '
         f'{data["public_repositories"]} public non-fork repositories, '
         f'{data["public_pull_requests"]} public pull requests authored, all time. '
+        f'{current_streak(data)} day contribution streak. '
         'Source languages measured by source bytes, excluding Jupyter notebooks. Links are below the image.')
     out = f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}" role="img" aria-labelledby="title desc"><title id="title">{escape(title)}</title><desc id="desc">{escape(desc)}</desc>'
     out += '<style>text{font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;font-weight:400} .still{display:none}@media(prefers-reduced-motion:reduce){.motion{display:none}.still{display:inline}}</style>'
@@ -227,32 +242,28 @@ def render(data, mobile=False, animated=True):
     else:
         out += text(x, 218, 'Turning complex data into useful tools.', size)
     offset = 32 if mobile else 0
-    out += command(x, 280+offset, 'ls projects')
+    out += command(x, 280+offset, 'ls project')
     for i, (name, label) in enumerate([('MonÉlu', 'civic data & AI'), ('Agentarium', 'agent tooling'), ('Interview Prep', 'learning tools')]):
         yy = 317 + offset + i * (67 if mobile else 36)
         out += text(x, yy, name, 23)
         out += text(x+20 if mobile else x+235, yy+27 if mobile else yy, label, 19 if mobile else 22, MUTED)
-    yy = 561 if mobile else 451
-    out += command(x, yy, 'building →') + text(x+185, yy, 'Agentarium', 23)
-    yy += 62
-    out += command(x, yy, 'contact')
-    out += text(x, yy+37, 'Portfolio ↗  LinkedIn ↗  Email ↗', 23)
-    divider = yy + 77
+    divider = 546 if mobile else 436
     out += rule(30, divider, w-30, divider)
     ty = divider + 45
     out += command(x, ty, 'telemetry')
     if mobile:
         stats = [(str(f'{data["contributions"]:,}'), 'contributions / year'),
             (str(data['public_repositories']), 'public repos'),
-            (str(data['public_pull_requests']), 'public PRs · all time')]
+            (str(data['public_pull_requests']), 'public PRs · all time'),
+            (str(current_streak(data)), 'day streak · current')]
         for i, (value, label) in enumerate(stats):
             out += text(x, ty+43+i*39, value, 25) + text(x+107, ty+43+i*39, label, 20, MUTED)
-        out += language_donut(data, x, ty+188, w-2*x, 20)
-        bx, by, bw, bh = x, ty+365, w-2*x, 224
+        out += language_donut(data, x, ty+227, w-2*x, 20)
+        bx, by, bw, bh = x, ty+404, w-2*x, 224
     else:
-        for i, (key, label) in enumerate([('contributions','contributions / year'), ('public_repositories','public repos'), ('public_pull_requests','public PRs · all time')]):
-            out += text(x, ty+44+i*65, f'{data[key]:,}', 24) + text(x, ty+69+i*65, label, 17, MUTED)
-        out += language_donut(data, x, ty+244, 277, 17)
+        for i, (value, label) in enumerate([(data['contributions'],'contributions / year'), (data['public_repositories'],'public repos'), (data['public_pull_requests'],'public PRs · all time'), (current_streak(data), 'day streak · current')]):
+            out += text(x, ty+44+i*65, f'{value:,}', 24) + text(x, ty+69+i*65, label, 17, MUTED)
+        out += language_donut(data, x, ty+309, 277, 17)
         out += rule(366, ty-12, 366, h-56)
         bx, by, bw, bh = 396, ty+32, w-428, 287
     if animated:
@@ -272,7 +283,11 @@ def readme(data):
 
 <p align="center">
   <a href="https://mon-elu.vercel.app/">MonÉlu ↗</a> ·
-  <a href="https://walid-peach.github.io/interview-prep/">Interview Prep ↗</a> ·
+  <a href="https://walid-peach.github.io/interview-prep/">Interview Prep ↗</a>
+</p>
+
+<p align="center">
+  <code>$ contact</code><br>
   <a href="https://walidelkhoukh.com">Portfolio ↗</a> ·
   <a href="https://www.linkedin.com/in/walid-elkhoukh">LinkedIn ↗</a> ·
   <a href="mailto:contact@walidelkhoukh.com">Email ↗</a>
@@ -286,10 +301,12 @@ def readme(data):
 Turning complex data into useful tools.
 
 - [MonÉlu](https://mon-elu.vercel.app/) — civic data & AI · [source](https://github.com/Walid-peach/MonElu)
-- Agentarium — agent tooling; currently building. No public demo linked yet.
+- Agentarium — agent tooling. No public demo linked yet.
 - [Interview Prep](https://walid-peach.github.io/interview-prep/) — learning tools · [source](https://github.com/Walid-peach/interview-prep)
 
-**Snapshot: {data['updated']} UTC.** {data['contributions']:,} contributions in GitHub's rolling-year calendar; {data['public_repositories']} public, owned, non-fork repositories; {data['public_pull_requests']} public pull requests authored, all time.
+**Snapshot: {data['updated']} UTC.** {data['contributions']:,} contributions in GitHub's rolling-year calendar; {data['public_repositories']} public, owned, non-fork repositories; {data['public_pull_requests']} public pull requests authored, all time; **{current_streak(data)} day contribution streak**.
+
+The streak counts consecutive days with GitHub contributions, including commits, pull requests and other qualifying activity; it does not count pushes specifically. A day without activity breaks the streak, except that the snapshot day has until its end to qualify. The streak is calculated from the available rolling-year calendar at each daily refresh.
 
 Language proportions measure source bytes across public, owned, non-fork repositories, excluding Jupyter notebooks from both the donut chart and its percentages. They are not proficiency ratings. Breakout auto-plays over the calendar; cells disappear when hit and reset each loop. It is an animation, not an interactive game. Reduced-motion preferences show a static calendar.
 
