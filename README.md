@@ -1,49 +1,31 @@
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/portfolio-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="./assets/portfolio-light.svg">
-  <img src="./assets/portfolio-light.svg" alt="Walid El Khoukh: AI & Data Engineer, from problem to production." width="1600">
+  <source media="(max-width: 640px)" srcset="./assets/terminal-mobile.svg">
+  <img src="./assets/terminal.svg" width="1200" alt="Walid El Khoukh — AI &amp; Data Engineer. A quiet terminal with projects, GitHub telemetry and animated contribution Breakout. Project and contact links follow below.">
 </picture>
 
-# Walid El Khoukh
+<p align="center">
+  <a href="https://mon-elu.vercel.app/">MonÉlu ↗</a> ·
+  <a href="https://walid-peach.github.io/interview-prep/">Interview Prep ↗</a> ·
+  <a href="https://walidelkhoukh.com">Portfolio ↗</a> ·
+  <a href="https://www.linkedin.com/in/walid-elkhoukh">LinkedIn ↗</a> ·
+  <a href="mailto:contact@walidelkhoukh.com">Email ↗</a>
+</p>
 
-AI & Data Engineer · From problem to production.
+<details>
+<summary>Text version &amp; data notes</summary>
 
-I build governed data systems and practical AI products with a bias toward traceability, useful interfaces, and delivery you can inspect.
+**Walid El Khoukh · AI & Data Engineer**
 
-[Portfolio](https://walidelkhoukh.com) · [GitHub](https://github.com/Walid-peach)
+Turning complex data into useful tools.
 
-## Public signal
+- [MonÉlu](https://mon-elu.vercel.app/) — civic data & AI · [source](https://github.com/Walid-peach/MonElu)
+- Agentarium — agent tooling; currently building. No public demo linked yet.
+- [Interview Prep](https://walid-peach.github.io/interview-prep/) — learning tools · [source](https://github.com/Walid-peach/interview-prep)
 
-<!-- PUBLIC_STATS:START -->
-| Public repositories | Repository stars | Latest public push | Snapshot UTC |
-| ---: | ---: | --- | --- |
-| 17 | 8 | 2026-09-07 | 2026-09-07 |
+**Snapshot: 2026-09-09 UTC.** 2,192 contributions in GitHub's rolling-year calendar; 18 public, owned, non-fork repositories; 318 public pull requests authored, all time.
 
-<sub>Public non-fork repository metadata only; stars are repository stars, not users or impact.</sub>
-<!-- PUBLIC_STATS:END -->
+Language proportions measure source bytes across public, owned, non-fork repositories, excluding Jupyter notebooks from both the donut chart and its percentages. They are not proficiency ratings. Breakout auto-plays over the calendar; cells disappear when hit and reset each loop. It is an animation, not an interactive game. Reduced-motion preferences show a static calendar.
 
-## Selected work
+[Portfolio](https://walidelkhoukh.com) · [LinkedIn](https://www.linkedin.com/in/walid-elkhoukh) · [Email](mailto:contact@walidelkhoukh.com)
 
-### MonÉlu
-
-[<img src="./assets/monelu.png" alt="Original explanatory visual: MonÉlu turns parliamentary archives into traceable civic answers through SQL and evidence-backed retrieval." width="100%">](https://mon-elu.vercel.app/)
-
-A civic data product that makes parliamentary records easier to follow: static open-data archives become a governed path to SQL answers and evidence-backed retrieval.
-
-[Open product](https://mon-elu.vercel.app/) · [Case study](https://walidelkhoukh.com/monelu/) · [Source](https://github.com/Walid-peach/MonElu)
-
-### Agentarium
-
-A local-first surface for truthful agent, session, delegation, and job state.
-
-### Interview Prep
-
-[<img src="./assets/interview-prep.png" alt="Actual public Interview Prep app screenshot showing flashcard categories and progress cards." width="100%">](https://walid-peach.github.io/interview-prep/)
-
-A zero-dependency flashcard-style study app for data engineering interviews, spanning Spark, Kafka, Airflow, dbt, Databricks, AWS, Kubernetes, Terraform, system design, and behavioral questions.
-
-[Open app](https://walid-peach.github.io/interview-prep/) · [Source](https://github.com/Walid-peach/interview-prep)
-
-## Contact
-
-[Email](mailto:contact@walidelkhoukh.com) · [LinkedIn](https://www.linkedin.com/in/walid-elkhoukh)
+</details>
