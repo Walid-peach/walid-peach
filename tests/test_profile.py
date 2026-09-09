@@ -43,6 +43,24 @@ class ProfileTests(unittest.TestCase):
         self.assertNotIn('Jupyter Notebook', dict(parts))
         self.assertEqual(parts[-1], ('Other', 7))
 
+    def test_streak_handles_today_grace_gaps_and_future_days(self):
+        data = {'updated': '2026-09-09', 'weeks': [{'contributionDays': [
+            {'date': '2026-09-06', 'contributionCount': 0},
+            {'date': '2026-09-07', 'contributionCount': 3},
+            {'date': '2026-09-08', 'contributionCount': 1},
+            {'date': '2026-09-09', 'contributionCount': 0},
+            {'date': '2026-09-10', 'contributionCount': 9}]}]}
+        self.assertEqual(p.current_streak(data), 2)
+        days = data['weeks'][0]['contributionDays']
+        days[3]['contributionCount'] = 1
+        self.assertEqual(p.current_streak(data), 3)
+        days[2]['contributionCount'] = 0
+        self.assertEqual(p.current_streak(data), 1)
+        days[3]['contributionCount'] = 0
+        self.assertEqual(p.current_streak(data), 0)
+        del days[2]
+        self.assertEqual(p.current_streak(data), 0)
+
     def test_empty_activity_and_languages_are_supported(self):
         self.data['languages'] = {}
         for w in self.data['weeks']:
