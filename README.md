@@ -1,19 +1,23 @@
+<p align="center">
+  <a href="https://walidelkhoukh.com"><img src="./assets/contact-portfolio.svg" width="172" height="47" alt="Portfolio"></a>
+  <a href="https://www.linkedin.com/in/walid-elkhoukh"><img src="./assets/contact-linkedin.svg" width="159" height="47" alt="LinkedIn"></a>
+  <a href="mailto:contact@walidelkhoukh.com"><img src="./assets/contact-email.svg" width="127" height="47" alt="Email"></a>
+</p>
+
+<picture>
+  <source media="(max-width: 640px)" srcset="./assets/intro-mobile.svg">
+  <img src="./assets/intro.svg" width="940" alt="Walid El Khoukh — AI &amp; Data Engineer. Turning complex data into useful tools.">
+</picture>
+<br><br>
+<picture>
+  <source media="(max-width: 640px)" srcset="./assets/projects-mobile.svg">
+  <img src="./assets/projects.svg" width="940" alt="Projects: MonÉlu — civic data and AI; Agentarium — agent tooling; Interview Prep — learning tools. Links in text version below.">
+</picture>
+<br><br>
 <picture>
   <source media="(max-width: 640px)" srcset="./assets/terminal-mobile.svg">
-  <img src="./assets/terminal.svg" width="1200" alt="Walid El Khoukh — AI &amp; Data Engineer. A quiet terminal with projects, GitHub telemetry and animated contribution Breakout. Project and contact links follow below.">
+  <img src="./assets/terminal.svg" width="940" alt="GitHub telemetry: contributions, repositories, pull requests, current contribution streak, source languages excluding notebooks and animated Breakout. Exact statistics and definitions below.">
 </picture>
-
-<p align="center">
-  <a href="https://mon-elu.vercel.app/">MonÉlu ↗</a> ·
-  <a href="https://walid-peach.github.io/interview-prep/">Interview Prep ↗</a>
-</p>
-
-<p align="center">
-  <code>$ contact</code><br>
-  <a href="https://walidelkhoukh.com">Portfolio ↗</a> ·
-  <a href="https://www.linkedin.com/in/walid-elkhoukh">LinkedIn ↗</a> ·
-  <a href="mailto:contact@walidelkhoukh.com">Email ↗</a>
-</p>
 
 <details>
 <summary>Text version &amp; data notes</summary>

@@ -15,8 +15,8 @@ class ProfileTests(unittest.TestCase):
         self.data = json.loads((ROOT / 'data/profile.json').read_text())
 
     def test_valid_svg_and_reduced_motion(self):
-        for mobile in (True, False):
-            svg = p.render(self.data, mobile)
+        for mobile, panel in [(m, p) for m in (True, False) for p in ('intro', 'projects', 'activity')]:
+            svg = p.render(self.data, mobile, panel=panel)
             root = ET.fromstring(svg)
             self.assertIn('prefers-reduced-motion', svg)
             for a in root.iter('{http://www.w3.org/2000/svg}animate'):
