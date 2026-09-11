@@ -217,92 +217,88 @@ def breakout(data, x, y, width, height, animated=True):
     return out
 
 
-def render(data, mobile=False, animated=True, panel=None):
-    w, h = (640, 1320) if mobile else (1200, 975)
-    x = 34 if mobile else 56
-    size = 24
-    title = 'Walid El Khoukh — AI & Data Engineer'
-    desc = ('Turning complex data into useful tools. MonÉlu: civic data and AI. '
-        'Agentarium: agent tooling, in development. Interview Prep: learning tools. '
-        f'{data["contributions"]} contributions in the past year, '
-        f'{data["public_repositories"]} public non-fork repositories, '
-        f'{data["public_pull_requests"]} public pull requests authored, all time. '
-        f'{current_streak(data)} day contribution streak. '
-        'Source languages measured by source bytes, excluding Jupyter notebooks. Links are below the image.')
-    out = f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}" role="img" aria-labelledby="title desc"><title id="title">{escape(title)}</title><desc id="desc">{escape(desc)}</desc>'
-    out += '<style>text{font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;font-weight:400} .still{display:none}@media(prefers-reduced-motion:reduce){.motion{display:none}.still{display:inline}}</style>'
-    out += f'<rect width="{w}" height="{h}" rx="8" fill="{BG}"/><rect x="1" y="1" width="{w-2}" height="{h-2}" rx="8" fill="none" stroke="{LINE}" stroke-width="1.5"/>'
-    for i, c in enumerate([CORAL, '#65707d', '#65707d']):
-        out += f'<circle cx="{30+i*23}" cy="27" r="6" fill="{c}"/>'
-    out += text(w/2, 34, 'walid / README.md', 18, MUTED, 'text-anchor="middle"') + rule(1, 54, w-1, 54)
-    out += command(x, 107, 'whoami') + text(x, 144, 'Walid El Khoukh', 27)
-    out += text(x, 181, 'AI & Data Engineer', size, MUTED)
-    if mobile:
-        out += text(x, 218, 'Turning complex data into', 22) + text(x, 248, 'useful tools.', 22)
-    else:
-        out += text(x, 218, 'Turning complex data into useful tools.', size)
+def render(data, mobile=False, animated=True, panel='activity'):
+    w = 640 if mobile else 940
+    h = {'intro': 324, 'projects': 350 if mobile else 318,
+         'activity': 790 if mobile else 520}[panel]
+    x = 32
+    label = {'intro':'about.sh', 'projects':'projects.sh', 'activity':'activity.sh'}[panel]
+    out = f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}" role="img"><title>{label}</title>'
+    out += '<style>text{font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;font-weight:400}.still{display:none}@media(prefers-reduced-motion:reduce){.motion{display:none}.still{display:inline}}</style>'
+    out += f'<rect x="1" y="1" width="{w-2}" height="{h-2}" rx="12" fill="{BG}" stroke="{LINE}" stroke-width="1.5"/>'
+    for i,c in enumerate([CORAL, '#87909c', '#59636e']):
+        out += f'<circle cx="{38+i*30}" cy="29" r="8" fill="{c}"/>'
+    out += text(144,37,label,21) + rule(1,55,w-1,55)
+    def heading(xx, yy, value, size=25):
+        return text(xx, yy, '$ '+value, size, CORAL)
     if panel == 'intro':
-        height = 280 if mobile else 250
-        out = out.replace(f'height="{h}" viewBox="0 0 {w} {h}"',
-            f'height="{height}" viewBox="0 0 {w} {height}"', 1)
-        out += rule(1, height-1, w-1, height-1)
-        return out + '</svg>\n'
-    offset = 32 if mobile else 0
-    out += command(x, 280+offset, 'ls project')
-    for i, (name, label) in enumerate([('MonÉlu', 'civic data & AI'), ('Agentarium', 'agent tooling'), ('Interview Prep', 'learning tools')]):
-        yy = 317 + offset + i * (67 if mobile else 36)
-        out += text(x, yy, name, 23)
-        out += text(x+20 if mobile else x+235, yy+27 if mobile else yy, label, 19 if mobile else 22, MUTED)
-    divider = 546 if mobile else 436
-    out += rule(30, divider, w-30, divider)
-    ty = divider + 45
-    out += command(x, ty, 'telemetry')
-    if mobile:
-        stats = [(str(f'{data["contributions"]:,}'), 'contributions / year'),
-            (str(data['public_repositories']), 'public repos'),
-            (str(data['public_pull_requests']), 'public PRs · all time'),
-            (str(current_streak(data)), 'day streak · current')]
-        for i, (value, label) in enumerate(stats):
-            out += text(x, ty+43+i*39, value, 25) + text(x+107, ty+43+i*39, label, 20, MUTED)
-        out += language_donut(data, x, ty+227, w-2*x, 20)
-        bx, by, bw, bh = x, ty+404, w-2*x, 224
+        out += heading(x,110,'whoami')
+        out += text(x,172,'Walid El Khoukh',34)
+        out += text(x,222,'AI & Data Engineer',29)
+        if mobile:
+            out += text(x,266,'Turning complex data into',23,MUTED)
+            out += text(x,297,'useful tools.',23,MUTED)
+        else:
+            out += text(x,276,'Turning complex data into useful tools.',27,MUTED)
+    elif panel == 'projects':
+        out += heading(x,110,'ls project')
+        for i,(name,desc) in enumerate([('MonÉlu','civic data & AI'),('Agentarium','agent tooling'),('Interview Prep','learning tools')]):
+            yy = 166+i*(67 if mobile else 49)
+            out += text(x,yy,name,27)
+            out += text(x+18 if mobile else 396, yy+27 if mobile else yy,desc,21 if mobile else 26,MUTED)
     else:
-        for i, (value, label) in enumerate([(data['contributions'],'contributions / year'), (data['public_repositories'],'public repos'), (data['public_pull_requests'],'public PRs · all time'), (current_streak(data), 'day streak · current')]):
-            out += text(x, ty+44+i*65, f'{value:,}', 24) + text(x, ty+69+i*65, label, 17, MUTED)
-        out += language_donut(data, x, ty+309, 277, 17)
-        out += rule(366, ty-12, 366, h-56)
-        bx, by, bw, bh = 396, ty+32, w-428, 287
-    if animated:
-        out += '<g class="motion">' + breakout(data, bx, by, bw, bh, True) + '</g>'
-        out += '<g class="still">' + breakout(data, bx, by, bw, bh, False) + '</g>'
-    else:
-        out += breakout(data, bx, by, bw, bh, False)
-    out += text(w-30, h-22, 'snapshot ' + data['updated'] + ' UTC', 14 if not mobile else 16, MUTED, 'text-anchor="end"')
-    out += '</svg>\n'
-    if panel:
-        cut = 280 if mobile else 250
-        top, height = cut, h-cut
-        out = out.replace('</svg>', rule(1, cut+1, w-1, cut+1) + '</svg>')
-        out = out.replace(f'height="{h}" viewBox="0 0 {w} {h}"',
-            f'height="{height}" viewBox="0 {top} {w} {height}"', 1)
-    return out
+        out += heading(x,110,'telemetry')
+        stats = [(f'{data["contributions"]:,}','contributions/year'),(str(data['public_repositories']),'public repos'),(str(data['public_pull_requests']),'public PRs'),(str(current_streak(data)),'day streak')]
+        for i,(value,label) in enumerate(stats):
+            xx = x+(i%2)*288 if mobile else x+i*222
+            yy = 168+(i//2)*84 if mobile else 168
+            out += text(xx+100,yy,value,32,WHITE,'text-anchor="middle"')
+            out += text(xx+100,yy+31,label,18,MUTED,'text-anchor="middle"')
+        yy = 335 if mobile else 268
+        out += heading(x,yy,'source --languages',22)
+        parts = language_parts(data['languages']); total=sum(v for _,v in parts)
+        colors=[CORAL,'#87939f','#c7ced6','#4c5663']
+        radius=69; cx=x+86; cy=yy+122; circumference=2*math.pi*radius; offset=0
+        for i,(name,value) in enumerate(parts):
+            length=circumference*value/total if total else 0
+            out += f'<circle cx="{cx}" cy="{cy}" r="{radius}" fill="none" stroke="{colors[i]}" stroke-width="34" stroke-dasharray="{length:.4f} {circumference-length:.4f}" stroke-dashoffset="{-offset:.4f}" transform="rotate(-90 {cx} {cy})"><title>{escape(name)}: {value/total:.1%}</title></circle>'
+            offset+=length
+            ly=yy+65+i*42
+            out += f'<circle cx="{x+214}" cy="{ly-6}" r="8" fill="{colors[i]}"/>'
+            out += text(x+236,ly,name,18)+text(x+402,ly,f'{value/total:.0%}',18,WHITE,'text-anchor="end"')
+        bx = x if mobile else 510
+        by = 570 if mobile else yy
+        out += heading(bx,by,'game contributions',22)
+        bw=w-2*x if mobile else w-bx-32
+        bh=165 if mobile else 205
+        if not mobile: out += rule(470,250,470,h-30)
+        if animated:
+            out += '<g class="motion">'+breakout(data,bx,by+33,bw,bh,True)+'</g>'
+            out += '<g class="still">'+breakout(data,bx,by+33,bw,bh,False)+'</g>'
+        else: out += breakout(data,bx,by+33,bw,bh,False)
+    return out+'</svg>\n'
 
 
 def readme(data):
-    return f'''<picture>
-  <source media="(max-width: 640px)" srcset="./assets/intro-mobile.svg">
-  <img src="./assets/intro.svg" width="1200" alt="Walid El Khoukh — AI &amp; Data Engineer. Turning complex data into useful tools.">
-</picture>
-
-<p align="left">
-  <a href="https://walidelkhoukh.com"><img src="./assets/contact-portfolio.svg" width="132" height="36" alt="Portfolio"></a>
-  <a href="https://www.linkedin.com/in/walid-elkhoukh"><img src="./assets/contact-linkedin.svg" width="122" height="36" alt="LinkedIn"></a>
-  <a href="mailto:contact@walidelkhoukh.com"><img src="./assets/contact-email.svg" width="98" height="36" alt="Email"></a>
+    return f'''<p align="center">
+  <a href="https://walidelkhoukh.com"><img src="./assets/contact-portfolio.svg" width="172" height="47" alt="Portfolio"></a>
+  <a href="https://www.linkedin.com/in/walid-elkhoukh"><img src="./assets/contact-linkedin.svg" width="159" height="47" alt="LinkedIn"></a>
+  <a href="mailto:contact@walidelkhoukh.com"><img src="./assets/contact-email.svg" width="127" height="47" alt="Email"></a>
 </p>
 
 <picture>
+  <source media="(max-width: 640px)" srcset="./assets/intro-mobile.svg">
+  <img src="./assets/intro.svg" width="940" alt="Walid El Khoukh — AI &amp; Data Engineer. Turning complex data into useful tools.">
+</picture>
+<br><br>
+<picture>
+  <source media="(max-width: 640px)" srcset="./assets/projects-mobile.svg">
+  <img src="./assets/projects.svg" width="940" alt="Projects: MonÉlu — civic data and AI; Agentarium — agent tooling; Interview Prep — learning tools. Links in text version below.">
+</picture>
+<br><br>
+<picture>
   <source media="(max-width: 640px)" srcset="./assets/terminal-mobile.svg">
-  <img src="./assets/terminal.svg" width="1200" alt="Projects, GitHub telemetry, contribution streak and animated Breakout. Project links are in the text version below.">
+  <img src="./assets/terminal.svg" width="940" alt="GitHub telemetry: contributions, repositories, pull requests, current contribution streak, source languages excluding notebooks and animated Breakout. Exact statistics and definitions below.">
 </picture>
 
 <details>
@@ -334,10 +330,10 @@ def main():
     args = parser.parse_args()
     data = refresh() if args.refresh else json.loads((ROOT / 'data/profile.json').read_text())
     validate(data)
-    for name, mobile in [('terminal.svg', False), ('terminal-mobile.svg', True)]:
-        (ROOT / 'assets' / name).write_text(render(data, mobile, panel='body'))
-        intro = 'intro-mobile.svg' if mobile else 'intro.svg'
-        (ROOT / 'assets' / intro).write_text(render(data, mobile, animated=False, panel='intro'))
+    for mobile in (False, True):
+        for name,panel in [('terminal','activity'),('intro','intro'),('projects','projects')]:
+            filename = name+('-mobile' if mobile else '')+'.svg'
+            (ROOT / 'assets' / filename).write_text(render(data,mobile,panel=panel))
     (ROOT / 'README.md').write_text(readme(data))
 
 
